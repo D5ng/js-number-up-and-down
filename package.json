@@ -10,11 +10,11 @@
   "type": "module",
   "scripts": {
     "dev": "yarn build --watch",
-    "build": "esbuild src/index.js --bundle --outdir=dist",
+    "build": "esbuild src/index.js --bundle --outdir=dist --platform=node --format=esm",
     "start": "node dist/index.js"
   },
   "devDependencies": {
-    "esbuild": "^0.21.1",
+    "esbuild": "^0.24.2",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5"
   }
