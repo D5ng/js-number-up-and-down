@@ -1,6 +1,6 @@
 import { readLineAsync } from "./utils/readLine.util"
 import { getRandomNumber } from "./index.util"
-import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT } from "./index.constants"
+import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT } from "./index.constants"
 
 let prevInputList = []
 let playCount = 0
@@ -8,33 +8,33 @@ let answer = getRandomNumber(1, 50)
 
 async function play() {
   if (isInitialStart(playCount)) {
-    console.log(`컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`)
+    console.log(PRINT.init)
   }
 
   if (isExceedCount(playCount)) {
-    console.log(`\x1b[1m\x1b[31m${`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`}\x1b[0m`)
+    console.log(PRINT.excced(answer))
     isRestart()
     return
   }
 
   playCount++
 
-  const inputValue = await readLineAsync(`\x1b[1m\x1b[96m숫자 입력: \x1b[0m`)
+  const inputValue = await readLineAsync(PRINT.input)
 
   if (!userInputValidation(inputValue)) {
-    throw new Error(`\x1b[31m${"숫자는 1~50 사이로 입력해주세요."}\x1b[0m`)
+    throw new Error(PRINT.userInputError)
   }
 
   const isValid = validateUserInput(Number(inputValue), answer)
 
   if (isValid) {
-    console.log(`\x1b[1m\x1b[32m${`축하합니다! ${playCount}번 만에 숫자를 맞추셨습니다.`}\x1b[0m`)
+    console.log(PRINT.answer(playCount))
     isRestart()
     return
   }
 
   prevInputList.push(Number(inputValue))
-  console.log(`\x1b[93m${`이전 추측: ${prevInputList.join(", ")} \n`}\x1b[0m`)
+  console.log(PRINT.prevGuess(prevInputList))
   play()
 }
 
@@ -78,7 +78,7 @@ function reset() {
 }
 
 async function isRestart() {
-  const answer = await readLineAsync(`\x1b[1m\x1b[96m게임을 다시 시작하시겠습니까? (yes/no): \x1b[0m`)
+  const answer = await readLineAsync(PRINT.reStart)
 
   if (answer === "yes") {
     reset()
@@ -86,7 +86,7 @@ async function isRestart() {
     return
   }
 
-  console.log(`\x1b[1m\x1b[96m게임을 종료합니다.\x1b[0m`)
+  console.log(PRINT.end)
 }
 
 play()
