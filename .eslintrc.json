@@ -1,5 +1,4 @@
 {
-  "rules": {},
   "env": {
     "es6": true,
     "node": true
@@ -8,5 +7,13 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"]
+  "rules": {
+    "no-console": "off",
+    "no-use-before-define": "off",
+    "no-plusplus": "off",
+    "no-shadow": "off",
+    "import/prefer-default-export": "off"
+  },
+  "extends": ["eslint:recommended", "airbnb-base", "prettier"],
+  "ignorePatterns": ["node_modules/", "dist/", "build/"]
 }

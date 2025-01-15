@@ -1,4 +1,4 @@
-import { readLineAsync } from "./utils/readLine.util"
+import { readLineAsync } from "./utils/readLine"
 import { getRandomNumber } from "./index.util"
 import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT } from "./index.constants"
 
@@ -38,32 +38,33 @@ async function play() {
   play()
 }
 
-function isInitialStart(playCount) {
-  return playCount === 0
+// Play Helper Function
+function isInitialStart(runCount) {
+  return runCount === 0
 }
 
-function isExceedCount(playCount) {
-  return playCount >= LIMIT_COUNT
+function isExceedCount(runCount) {
+  return runCount >= LIMIT_COUNT
 }
 
 function userInputValidation(value) {
   return value >= MIN_NUMBER && value <= MAX_NUMBER
 }
 
-function validateUserInput(userInputValue, answer) {
+function validateUserInput(userInputValue, correctAnswer) {
   let result = false
 
-  if (userInputValue > answer) {
+  if (userInputValue > correctAnswer) {
     console.log("\x1b[1m\x1b[95m%s\x1b[0m", "다운")
     result = false
   }
 
-  if (userInputValue < answer) {
+  if (userInputValue < correctAnswer) {
     console.log("\x1b[1m\x1b[95m%s\x1b[0m", "업")
     result = false
   }
 
-  if (userInputValue === answer) {
+  if (userInputValue === correctAnswer) {
     console.log("\x1b[1m\x1b[95m%s\x1b[0m", "정답!")
     result = true
   }
