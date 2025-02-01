@@ -7,13 +7,13 @@ let playCount = 0
 let answer = getRandomNumber(1, 50)
 
 async function play() {
-  if (isInitialStart(playCount)) {
+  if (isFirstGame(playCount)) {
     console.log(PRINT.init)
   }
 
   if (isExceedCount(playCount)) {
     console.log(PRINT.excced(answer))
-    isRestart()
+    handleGameRestart()
     return
   }
 
@@ -22,24 +22,27 @@ async function play() {
   const inputValue = await readLineAsync(PRINT.input)
 
   if (!userInputValidation(inputValue)) {
-    throw new Error(PRINT.userInputError)
+    console.error(PRINT.userInputError)
   }
 
   const isValid = validateUserInput(Number(inputValue), answer)
 
   if (isValid) {
     console.log(PRINT.answer(playCount))
-    isRestart()
+    handleGameRestart()
     return
   }
 
   prevInputList.push(Number(inputValue))
   console.log(PRINT.prevGuess(prevInputList))
+
   play()
 }
 
-// Play Helper Function
-function isInitialStart(runCount) {
+/** ========================================================================
+ * !                           Helper Function
+ *========================================================================* */
+function isFirstGame(runCount) {
   return runCount === 0
 }
 
@@ -52,42 +55,40 @@ function userInputValidation(value) {
 }
 
 function validateUserInput(userInputValue, correctAnswer) {
-  let result = false
-
   if (userInputValue > correctAnswer) {
-    console.log("\x1b[1m\x1b[95m%s\x1b[0m", "다운")
-    result = false
+    console.log(PRINT.validateResult.down)
+    return false
   }
 
   if (userInputValue < correctAnswer) {
-    console.log("\x1b[1m\x1b[95m%s\x1b[0m", "업")
-    result = false
+    console.log(PRINT.validateResult.up)
+    return false
   }
 
   if (userInputValue === correctAnswer) {
-    console.log("\x1b[1m\x1b[95m%s\x1b[0m", "정답!")
-    result = true
+    console.log(PRINT.validateResult.answer)
+    return true
   }
 
-  return result
+  return false
 }
 
-function reset() {
+function resetGameSettings() {
   prevInputList = []
   playCount = 0
   answer = getRandomNumber(MIN_NUMBER, MAX_NUMBER)
 }
 
-async function isRestart() {
-  const answer = await readLineAsync(PRINT.reStart)
+async function handleGameRestart() {
+  const isRestart = (await readLineAsync(PRINT.restart)) === "yes"
 
-  if (answer === "yes") {
-    reset()
-    play()
+  if (!isRestart) {
+    console.log(PRINT.end)
     return
   }
 
-  console.log(PRINT.end)
+  resetGameSettings()
+  play()
 }
 
 play()
