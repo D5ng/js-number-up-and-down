@@ -1,5 +1,4 @@
-import { readLineAsync } from "./utils/readLine"
-import { getRandomNumber } from "./index.util"
+import { readLineAsync, getRandomNumber } from "./utils"
 import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT } from "./index.constants"
 
 let prevInputList = []
@@ -17,12 +16,12 @@ async function play() {
     return
   }
 
-  playCount++
-
   const inputValue = await readLineAsync(PRINT.input)
 
   if (!userInputValidation(inputValue)) {
     console.error(PRINT.userInputError)
+    play()
+    return
   }
 
   const isValid = validateUserInput(Number(inputValue), answer)
@@ -35,6 +34,8 @@ async function play() {
 
   prevInputList.push(Number(inputValue))
   console.log(PRINT.prevGuess(prevInputList))
+
+  playCount++
 
   play()
 }
