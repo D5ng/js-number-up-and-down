@@ -1,5 +1,6 @@
 import { readLineAsync, getRandomNumber } from "./utils"
-import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT } from "./index.constants"
+import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT, invalidNumberMessage } from "./index.constants"
+import NumberTypeError from "./utils/error"
 
 const playState = {
   prevInputList: [],
@@ -46,16 +47,24 @@ async function play() {
  * !                           Helper Function
  *========================================================================* */
 function isFirstGame(runCount) {
+  if (typeof runCount !== "number") {
+    throw new NumberTypeError(invalidNumberMessage)
+  }
+
   return runCount === 0
 }
 
 function isExceedCount(runCount) {
+  if (typeof runCount !== "number") {
+    throw new NumberTypeError(invalidNumberMessage)
+  }
+
   return runCount >= LIMIT_COUNT
 }
 
 function userInputValidation(value) {
   if (typeof value !== "number") {
-    throw new Error("값은 숫자여야 합니다.")
+    throw new Error(invalidNumberMessage)
   }
 
   return value >= MIN_NUMBER && value <= MAX_NUMBER
