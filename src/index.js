@@ -1,11 +1,14 @@
 import { readLineAsync, getRandomNumber } from "./utils"
-import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT, invalidNumberMessage } from "./index.constants"
+import { PRINT, invalidNumberMessage } from "./index.constants"
 import NumberTypeError from "./utils/error"
 
-const playState = {
+const state = {
   prevInputList: [],
   count: 0,
-  answer: getRandomNumber(1, 50),
+  answer: getRandomNumber(this.min, this.max),
+  min: 0,
+  max: 0,
+  availableAttempts: 0,
 }
 
 async function play() {
@@ -18,6 +21,8 @@ async function play() {
     handleGameRestart()
     return
   }
+
+  return
 
   const inputValue = await readLineAsync(PRINT.input)
 
