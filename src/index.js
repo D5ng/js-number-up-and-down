@@ -54,6 +54,10 @@ function isExceedCount(runCount) {
 }
 
 function userInputValidation(value) {
+  if (typeof value !== "number") {
+    throw new Error("값은 숫자여야 합니다.")
+  }
+
   return value >= MIN_NUMBER && value <= MAX_NUMBER
 }
 
