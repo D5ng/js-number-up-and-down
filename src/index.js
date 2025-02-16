@@ -1,17 +1,19 @@
 import { readLineAsync, getRandomNumber } from "./utils"
 import { MAX_NUMBER, MIN_NUMBER, LIMIT_COUNT, PRINT } from "./index.constants"
 
-let prevInputList = []
-let playCount = 0
-let answer = getRandomNumber(1, 50)
+const playState = {
+  prevInputList: [],
+  count: 0,
+  answer: getRandomNumber(1, 50),
+}
 
 async function play() {
-  if (isFirstGame(playCount)) {
+  if (isFirstGame(playState.count)) {
     console.log(PRINT.init)
   }
 
-  if (isExceedCount(playCount)) {
-    console.log(PRINT.excced(answer))
+  if (isExceedCount(playState.count)) {
+    console.log(PRINT.excced(playState.answer))
     handleGameRestart()
     return
   }
@@ -24,18 +26,18 @@ async function play() {
     return
   }
 
-  const isValid = validateUserInput(Number(inputValue), answer)
+  const isValid = validateUserInput(Number(inputValue), playState.answer)
 
   if (isValid) {
-    console.log(PRINT.answer(playCount))
+    console.log(PRINT.answer(playState.count))
     handleGameRestart()
     return
   }
 
-  prevInputList.push(Number(inputValue))
-  console.log(PRINT.prevGuess(prevInputList))
+  playState.prevInputList.push(Number(inputValue))
+  console.log(PRINT.prevGuess(playState.prevInputList))
 
-  playCount++
+  playState.count++
 
   play()
 }
@@ -75,9 +77,9 @@ function validateUserInput(userInputValue, correctAnswer) {
 }
 
 function resetGameSettings() {
-  prevInputList = []
-  playCount = 0
-  answer = getRandomNumber(MIN_NUMBER, MAX_NUMBER)
+  playState.prevInputList = []
+  playState.count = 0
+  playState.answer = getRandomNumber(MIN_NUMBER, MAX_NUMBER)
 }
 
 async function handleGameRestart() {
