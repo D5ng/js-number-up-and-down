@@ -1,9 +1,13 @@
-import { setting } from "./service/game-setting"
-import { start } from "./service/game-start"
+/* eslint-disable no-await-in-loop */
+import { init } from "./service/init"
+import { play } from "./service/play"
 
 async function App() {
-  await setting()
-  await start()
+  await init()
+
+  while (true) {
+    await play()
+  }
 }
 
 App()
