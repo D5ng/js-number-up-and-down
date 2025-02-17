@@ -1,8 +1,8 @@
 import { invalidNumberMessage, PRINT } from "../index.constants"
-import { state } from "../model"
+import { setState, state } from "../model"
 import { readLineAsync, NumberTypeError } from "../utils"
 
-export async function start() {
+export async function play() {
   // Todo: 게임을 처음 시작할 때
   if (isFirstGame(state.count)) {
     console.log(PRINT.play.start(state.min, state.max))
@@ -16,33 +16,44 @@ export async function start() {
   }
 
   // Todo: 사용자한테 값을 입력 받음.
-  const inputValue = await readLineAsync(PRINT.input)
-  const parsedInputValue = Number(inputValue)
+  const userInputValue = await promptUserInput()
 
   // Todo: 사용자가 입력한 값의 범위가 벗어났을 때
-  if (!userInputValidation(parsedInputValue)) {
+  if (!validateRange(userInputValue)) {
     console.error(PRINT.userInputError)
-    start()
     return
   }
 
-  const isValid = validateUserInput(parsedInputValue, state.answer)
+  // Todo: 입력한 값에 대한 결과를 반환
+  const resultType = validateAnswer(userInputValue, state.answer)
+  console.log(PRINT.play.validateResult[resultType])
 
-  if (isValid) {
+  // Todo: 결과가 true라면 ~
+  if (resultType === "answer") {
     console.log(PRINT.play.answer(state.count))
     await handleGameRestart()
     return
   }
 
-  state.prevInputList.push(Number(inputValue))
+  // Todo: 이전에 입력한 값들을 출력
+  const updatePrevGuess = [...state.prevInputList, Number(userInputValue)]
+  setState({ prevInputList: updatePrevGuess })
   console.log(PRINT.play.prevGuess(state.prevInputList))
 
   state.count++
-
-  start()
 }
 
-function isFirstGame(runCount) {
+export async function promptUserInput() {
+  const inputValue = Number(await readLineAsync(PRINT.input))
+
+  if (typeof inputValue !== "number") {
+    throw new Error("반드시 숫자로 입력해주세요!")
+  }
+
+  return inputValue
+}
+
+export function isFirstGame(runCount) {
   if (typeof runCount !== "number") {
     throw new NumberTypeError(invalidNumberMessage)
   }
@@ -50,7 +61,7 @@ function isFirstGame(runCount) {
   return runCount === 0
 }
 
-function userInputValidation(value) {
+export function validateRange(value) {
   if (typeof value !== "number") {
     throw new Error(invalidNumberMessage)
   }
@@ -58,32 +69,27 @@ function userInputValidation(value) {
   return value >= state.min && value <= state.max
 }
 
-function validateUserInput(userInputValue, correctAnswer) {
+export function validateAnswer(userInputValue, correctAnswer) {
   if (userInputValue > correctAnswer) {
-    console.log(PRINT.play.validateResult.down)
-    return false
+    return "down"
   }
 
   if (userInputValue < correctAnswer) {
-    console.log(PRINT.play.validateResult.up)
-    return false
+    return "up"
   }
 
   if (userInputValue === correctAnswer) {
-    console.log(PRINT.play.validateResult.answer)
-    return true
+    return "answer"
   }
 
-  return false
+  return null
 }
 
 function resetGameSettings() {
-  state.prevInputList = []
-  state.count = 0
-  state.answer = 0
+  setState({ prevInputList: [], count: 0, answer: null })
 }
 
-async function handleGameRestart() {
+export async function handleGameRestart() {
   const isRestart = (await readLineAsync(PRINT.play.restart)) === "yes"
 
   if (!isRestart) {
