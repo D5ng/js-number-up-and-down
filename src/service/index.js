@@ -1,2 +1,4 @@
-export { setting } from "./game-setting"
-export { start } from "./game-start"
+export { init } from "./init"
+export { gameResult } from "./gameResult"
+export { handleGameRestart } from "./gameRestart"
+export { promptUserInput } from "./promptUserInput"

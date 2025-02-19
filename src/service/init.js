@@ -1,4 +1,4 @@
-import { PRINT } from "../index.constants"
+import { PRINT } from "../App.constants"
 import { setState } from "../model"
 import { generateRandomNumber, readLineAsync } from "../utils"
 
