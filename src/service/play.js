@@ -18,12 +18,6 @@ export async function play() {
   // Todo: 사용자한테 값을 입력 받음.
   const userInputValue = await promptUserInput()
 
-  // Todo: 사용자가 입력한 값의 범위가 벗어났을 때
-  if (!validateRange(userInputValue)) {
-    console.error(PRINT.userInputError)
-    return
-  }
-
   // Todo: 입력한 값에 대한 결과를 반환
   const resultType = validateAnswer(userInputValue, state.answer)
   console.log(PRINT.play.validateResult[resultType])
@@ -46,19 +40,15 @@ export async function play() {
 export async function promptUserInput() {
   const inputValue = Number(await readLineAsync(PRINT.input))
 
-  if (typeof inputValue !== "number") {
-    throw new Error("반드시 숫자로 입력해주세요!")
+  if (Number.isNaN(inputValue)) {
+    throw new Error("숫자로 입력해주세요!")
+  }
+
+  if (!validateRange(inputValue)) {
+    throw new Error(PRINT.userInputError)
   }
 
   return inputValue
-}
-
-export function isFirstGame(runCount) {
-  if (typeof runCount !== "number") {
-    throw new NumberTypeError(invalidNumberMessage)
-  }
-
-  return runCount === 0
 }
 
 export function validateRange(value) {
