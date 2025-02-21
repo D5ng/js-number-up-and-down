@@ -1,16 +1,18 @@
 /* eslint-disable no-await-in-loop */
 import { PRINT } from "./App.constants"
 import { state } from "./model"
-import { init, gameResult, promptUserInput, handleGameRestart } from "./service"
+import { init, gameResult, promptUserInput, handleGameRestart, gameOver } from "./service"
+import { isGameOver } from "./utils"
 
 async function App() {
   await init()
   console.log(PRINT.play.start(state.min, state.max))
 
   while (true) {
-    if (state.count >= state.limitCount) {
-      console.log(PRINT.play.excced(state.answer, state.limitCount))
-      await handleGameRestart(App)
+    if (isGameOver(state.count, state.limitCount)) {
+      gameOver(state.answer, state.limitCount, async () => {
+        await handleGameRestart(App)
+      })
       return
     }
 
