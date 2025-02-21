@@ -9,10 +9,9 @@ async function App() {
   console.log(PRINT.play.start(state.min, state.max))
 
   while (true) {
-    if (isGameOver(state.count, state.limitCount)) {
-      gameOver(state.answer, state.limitCount, async () => {
-        await handleGameRestart(App)
-      })
+    if (isGameOver({ count: state.count, limitCount: state.limitCount })) {
+      console.log(PRINT.play.excced(answer, limitCount))
+      await handleGameRestart(App)
       return
     }
 
