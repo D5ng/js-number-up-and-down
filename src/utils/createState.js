@@ -1,8 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-continue */
-
 const useState = (() => {
   const states = []
   let currentStateId = 0
@@ -12,29 +7,34 @@ const useState = (() => {
       throw new Error("initialState는 객체여야만 합니다!")
     }
 
-    if (!states[currentStateId]) {
-      states[currentStateId] = initialState
-    }
+    const index = currentStateId
 
-    const state = Array.isArray(states[currentStateId]) ? [...states[currentStateId]] : { ...states[currentStateId] }
+    const getState = () => states[index] ?? initialState
 
     const setState = (newState) => {
-      if (typeof newState !== "object" || newState === null) {
+      if ((typeof newState !== "object" && typeof newState !== "function") || newState === null) {
         return
       }
 
-      for (const key in state) {
-        if (!(key in newState)) {
-          continue
-        }
-
-        state[key] = newState[key]
+      if (typeof newState === "function") {
+        const updateState = newState(getState())
+        states[index] = updateState
+        return
       }
+
+      const updateState = Array.isArray(newState)
+        ? [...newState]
+        : Object.keys(newState).reduce((obj, key) => {
+            obj[key] = key in getState() ? newState[key] : state[key]
+            return obj
+          }, {})
+
+      states[index] = updateState
     }
 
     currentStateId++
 
-    return [state, setState]
+    return [getState, setState]
   }
 
   return useState
