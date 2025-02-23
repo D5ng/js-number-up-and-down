@@ -12,7 +12,11 @@ const useState = (() => {
       throw new Error("initialState는 객체여야만 합니다!")
     }
 
-    const state = states[currentStateId] ?? initialState
+    if (!states[currentStateId]) {
+      states[currentStateId] = initialState
+    }
+
+    const state = Array.isArray(states[currentStateId]) ? [...states[currentStateId]] : { ...states[currentStateId] }
 
     const setState = (newState) => {
       if (typeof newState !== "object" || newState === null) {
