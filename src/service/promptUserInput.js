@@ -1,29 +1,19 @@
-import { PRINT } from "../App.constants"
-import { readLineAsync } from "../utils"
-import { state } from "../model"
+import { PRINT } from "../constants"
+import { readLineAsync, validateRange } from "../utils"
 
-export async function promptUserInput() {
-  const inputValue = Number(await readLineAsync(PRINT.input))
+export async function promptUserInput(min, max) {
+  while (true) {
+    try {
+      const inputValue = Number(await readLineAsync(PRINT.input))
+      const isValid = validateRange(inputValue, min, max)
 
-  if (Number.isNaN(inputValue)) {
-    throw new Error("숫자로 입력해주세요!")
+      if (!isValid) {
+        throw new Error(PRINT.userInputError(min, max))
+      }
+
+      return inputValue
+    } catch (error) {
+      console.log(PRINT.error(error.message))
+    }
   }
-
-  if (!validateRange(inputValue, state)) {
-    throw new Error(PRINT.userInputError)
-  }
-
-  return inputValue
-}
-
-function validateRange(value, range) {
-  if (typeof value !== "number") {
-    throw new Error("값을 숫자로 입력해주세요!")
-  }
-
-  if (range.min === undefined || range.max === undefined) {
-    throw new Error("최소값과 최대값을 입력해주세요.")
-  }
-
-  return value >= range.min && value <= range.max
 }
