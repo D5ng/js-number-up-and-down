@@ -1,6 +1,6 @@
 import { useState } from "../utils"
 
-export const { state, setState } = (() => {
+export const { getState, setState } = (() => {
   const initialState = {
     prevInputList: [],
     count: 0,
@@ -10,6 +10,6 @@ export const { state, setState } = (() => {
     limitCount: 0,
   }
 
-  const [state, setState] = useState(initialState)
-  return { state, setState }
+  const [getState, setState] = useState(initialState)
+  return { getState, setState }
 })()

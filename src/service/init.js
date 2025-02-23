@@ -6,7 +6,7 @@ export async function init() {
   const [min, max] = await promptValueRange()
   const limitCount = await promptAvailableAttempts()
   const answer = generateRandomNumber(min, max)
-  setState({ min, max, answer, limitCount })
+  setState((state) => ({ ...state, min, max, answer, limitCount }))
 }
 
 async function promptValueRange() {
