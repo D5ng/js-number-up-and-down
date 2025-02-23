@@ -1,12 +1,18 @@
-import { PRINT } from "../App.constants"
+import { PRINT } from "../constants"
 import { setState } from "../model"
 import { readLineAsync } from "../utils"
 
-export async function handleGameRestart(func) {
-  const result = (await readLineAsync(PRINT.play.restart)) === "yes"
+/**
+ * 게임 재시작
+ * @param { Function } func 게임을 다시 시작할 함수
+ * @returns { Promise<void> }
+ */
 
-  if (!result) {
-    console.log(PRINT.play.end)
+export async function handleGameRestart(func) {
+  const result = await readLineAsync(PRINT.prompt.restart)
+
+  if (result.toLowerCase() !== "yes") {
+    console.log(PRINT.prompt.end)
     return
   }
 
